@@ -26,7 +26,7 @@ bot.onText(/\/start/, async(msg) => {
 });
    
     // -----Help-----
-const commands = ['/add', '/update','/delete'];
+const commands = ['/add', '/update','/delete','trello_app'];
 bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     const opts = {
@@ -54,6 +54,9 @@ bot.on('callback_query', (callbackQuery) => {
         case '/update':
             bot.sendMessage(chatId,`please use /update like this /update title status (only status can updated)`);
             break;
+        case 'trello_app':
+            bot.sendMessage(chatId,`Please follow this link: <a href="https://aman-bot.vercel.app/">Trello app link</a>`,{ parse_mode: "HTML" });
+            break;
         default:
             break;
     }
@@ -68,7 +71,10 @@ bot.on('message',(msg)=>{
             bot.sendMessage(chatId,`please use /delete like this /delete title`);
             break;
         case '/update':
-            bot.sendMessage(chatId,`please use /update like this /update title status (only status can updated)`);
+            bot.sendMessage(chatId,`please use /update like this /update title status (status-todo, pending, done)`);
+            break;     
+        case '/trello_app':
+            bot.sendMessage(chatId,`Please follow this link: <a href="https://aman-bot.vercel.app/">Trello app link</a>`,{ parse_mode: "HTML" });
             break;
         default:
             break;
@@ -116,7 +122,7 @@ bot.onText(/\/add (.*)/, async(msg, match) => {
         }
         let res  = await AddTask({title,description,chatId})
         if(res.title){
-            bot.sendMessage(chatId, `Task created with title ${res.title}`);
+            bot.sendMessage(chatId, `Task created with title ${res.title} ✅`);
         }else{
             bot.sendMessage(chatId, `Title should be unique Please create different one :)`);
         }
@@ -151,7 +157,7 @@ bot.onText(/\/delete (.*)/,async (msg, match) => {
         }
         let deleted =await DeleteTask(task._id);
         console.log(deleted)
-        bot.sendMessage(chatId, `task ${title} deleted successfully see available tasks /get`);
+        bot.sendMessage(chatId, `task ${title} deleted successfully see available tasks /get ✅`);
     } catch (error) {
         bot.sendMessage(chatId, `There is an Error occur ${error}`);
     }
@@ -171,7 +177,7 @@ bot.onText(/\/update (.*)/, async(msg, match) => {
             return bot.sendMessage(chatId, `Please click on /get and see valid tasks`);
         }
         let res = await MoveTask(task._id,status);
-        bot.sendMessage(chatId, `Congratulations, ! Your title: ${title} has been updated with status: ${status}.`);
+        bot.sendMessage(chatId, `Congratulations 🎊, ! Your title: ${title} has been updated with status: ${status}. ✅`);
     } catch (error) {
         bot.sendMessage(chatId, `There is an Error occur ${error}`);
     }
